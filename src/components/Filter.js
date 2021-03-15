@@ -16,15 +16,15 @@ class Filter extends Component {
     searchError: false,
   };
 
-  getBooks = (e) => {
+  displayBooks = (e) => {
     const query = e.target.value;
     this.setState({ query });
 
     if (query) {
       BooksAPI.search(query.trim(), 20).then((booksArr) => {
-        booksArr.length > 0
-          ? this.setState({ newBooksArr: booksArr, searchError: false })
-          : this.setState({ newBooksArr: [], searchError: true });
+        if (booksArr.length > 0)
+          this.setState({ newBooksArr: booksArr, searchError: false });
+        else this.setState({ newBooksArr: [], searchError: true });
       });
     } else this.setState({ newBooksArr: [], searchError: false });
   };
@@ -32,6 +32,22 @@ class Filter extends Component {
   render() {
     const { query, newBooksArr, searchError } = this.state;
     const { booksArr, toggleLibrary } = this.props;
+
+    let searchBook = newBooksArr.length > 0 && (
+      <div>
+        <h3>Search received {newBooksArr.length} books </h3>
+        <ol className="books-grid">
+          {newBooksArr.map((book) => (
+            <Book
+              book={book}
+              booksArr={booksArr}
+              toggleLibrary={toggleLibrary}
+              key={book.id}
+            />
+          ))}
+        </ol>
+      </div>
+    );
 
     return (
       <div className="search-books">
@@ -44,30 +60,14 @@ class Filter extends Component {
               type="text"
               placeholder="Search by title or author"
               value={query}
-              onChange={this.getBooks}
+              onChange={this.displayBooks}
             />
           </div>
         </div>
 
         <div className="search-books-results">
-          {newBooksArr.length > 0 && (
-            <div>
-              <h3>Search returned {newBooksArr.length} books </h3>
-              <ol className="books-grid">
-                {newBooksArr.map((book) => (
-                  <Book
-                    book={book}
-                    booksArr={booksArr}
-                    key={book.id}
-                    toggleLibrary={toggleLibrary}
-                  />
-                ))}
-              </ol>
-            </div>
-          )}
-          {searchError && (
-            <h3>Search did not return any books. Please try again!</h3>
-          )}
+          {searchBook}
+          {searchError && <h3>Could not find any books. Try again, please!</h3>}
         </div>
       </div>
     );
