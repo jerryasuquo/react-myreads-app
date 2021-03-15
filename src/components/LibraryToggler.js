@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-class ShelfChanger extends Component {
+class LibraryToggler extends Component {
   static propTypes = {
     book: PropTypes.object.isRequired,
     books: PropTypes.array.isRequired,
@@ -40,4 +40,4 @@ class ShelfChanger extends Component {
   }
 }
 
-export default ShelfChanger;
+export default LibraryToggler;
