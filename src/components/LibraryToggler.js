@@ -5,28 +5,27 @@ class LibraryToggler extends Component {
   static propTypes = {
     book: PropTypes.object.isRequired,
     books: PropTypes.array.isRequired,
-    changeShelf: PropTypes.func.isRequired,
+    toggleLibrary: PropTypes.func.isRequired,
   };
 
-  updateShelf = (e) => this.props.changeShelf(this.props.book, e.target.value);
+  updateShelf = (e) =>
+    this.props.toggleLibrary(this.props.book, e.target.value);
 
   render() {
     const { book, books } = this.props;
 
-    // setting current shelf to none as default
-    let currentShelf = "none";
+    let currentLibrary = "none";
 
-    // setting current shelf to book.shelf, if book is in current list
     for (let item of books) {
       if (item.id === book.id) {
-        currentShelf = item.shelf;
+        currentLibrary = item.shelf;
         break;
       }
     }
 
     return (
       <div className="book-shelf-changer">
-        <select onChange={this.updateShelf} defaultValue={currentShelf}>
+        <select onChange={this.updateShelf} defaultValue={currentLibrary}>
           <option value="none" disabled>
             Move to...
           </option>

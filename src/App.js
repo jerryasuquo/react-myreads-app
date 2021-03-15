@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Route, Switch, Link } from "react-router-dom";
-import * as BooksAPI from "../utils/BooksAPI";
-import BookArray from "./BookArray";
-import Filter from "./Filter";
-import NotFound from "./NotFound";
-import "../css/App.css";
+import * as BooksAPI from "./utils/BooksAPI";
+import BookArray from "./components/BookArray";
+import Filter from "./components/Filter";
+import NotFound from "./components/NotFound";
+import "./css/App.css";
 
 class App extends Component {
   state = { books: [] };

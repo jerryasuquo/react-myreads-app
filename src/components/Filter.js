@@ -7,34 +7,47 @@ import * as BooksAPI from "../utils/BooksAPI";
 class Filter extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
-    changeShelf: PropTypes.func.isRequired,
+    toggleLibrary: PropTypes.func.isRequired,
   };
 
   state = {
     query: "",
-    newBooks: [],
-    searchErr: false,
+    newBooksArr: [],
+    searchError: false,
   };
 
-  getBooks = (e) => {
+  displayBooks = (e) => {
     const query = e.target.value;
-    this.setState({ query });
+    this.setState({ query: query });
 
-    // running the search, if user input
     if (query) {
-      BooksAPI.search(query.trim(), 20).then((books) => {
-        books.length > 0
-          ? this.setState({ newBooks: books, searchErr: false })
-          : this.setState({ newBooks: [], searchErr: true });
+      BooksAPI.search(query.trim(), 10).then((books) => {
+        if (books.length > 0)
+          this.setState({ newBooksArr: books, searchError: false });
+        else this.setState({ newBooksArr: [], searchError: true });
       });
-
-      // resetting state to default, if query is empty
-    } else this.setState({ newBooks: [], searchErr: false });
+    } else this.setState({ newBooksArr: [], searchError: false });
   };
 
   render() {
-    const { query, newBooks, searchErr } = this.state;
-    const { books, changeShelf } = this.props;
+    const { query, newBooksArr, searchError } = this.state;
+    const { books, toggleLibrary } = this.props;
+
+    let searchDisplayed = newBooksArr.length > 0 && (
+      <div>
+        <h3>Search displayed {newBooksArr.length} books </h3>
+        <ol className="books-grid">
+          {newBooksArr.map((book) => (
+            <Book
+              book={book}
+              books={books}
+              toggleLibrary={toggleLibrary}
+              key={book.id}
+            />
+          ))}
+        </ol>
+      </div>
+    );
 
     return (
       <div className="search-books">
@@ -45,31 +58,20 @@ class Filter extends Component {
           <div className="search-books-input-wrapper">
             <input
               type="text"
-              placeholder="Search by title or author"
+              placeholder="Enter a title or author"
               value={query}
-              onChange={this.getBooks}
+              onChange={this.displayBooks}
             />
           </div>
         </div>
 
         <div className="search-books-results">
-          {newBooks.length > 0 && (
-            <div>
-              <h3>Search returned {newBooks.length} books </h3>
-              <ol className="books-grid">
-                {newBooks.map((book) => (
-                  <Book
-                    book={book}
-                    books={books}
-                    key={book.id}
-                    changeShelf={changeShelf}
-                  />
-                ))}
-              </ol>
-            </div>
-          )}
-          {searchErr && (
-            <h3>Search did not return any books. Please try again!</h3>
+          {searchDisplayed}
+          {searchError && (
+            <h3>
+              Couldn't display any books. If it's not too much trouble, attempt
+              once more!
+            </h3>
           )}
         </div>
       </div>
