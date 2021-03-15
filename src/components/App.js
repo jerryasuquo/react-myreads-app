@@ -1,37 +1,31 @@
 import React, { Component } from "react";
 import { Route, Switch, Link } from "react-router-dom";
 import * as BooksAPI from "../utils/BooksAPI";
-import BookList from "./BookList";
+import BookArray from "./BookArray";
 import Search from "./Search";
 import NotFound from "./NotFound";
 import "../css/App.css";
 
 class BooksApp extends Component {
-  state = { books: [] };
+  state = { booksArr: [] };
 
   componentDidMount() {
-    // getting books on load
-    BooksAPI.getAll().then((books) => this.setState({ books }));
+    BooksAPI.getAll().then((booksArr) => this.setState({ booksArr }));
   }
 
-  changeShelf = (changedBook, shelf) => {
-    BooksAPI.update(changedBook, shelf).then((res) => {
-      // setting shelf for new or updated book
-      changedBook.shelf = shelf;
-      // updating state with changed book
+  toggleLibrary = (toggledBook, library) => {
+    BooksAPI.update(toggledBook, library).then((res) => {
+      toggledBook.library = library;
       this.setState((currentState) => ({
-        books: currentState.books
-          // removing updated book from array
-          .filter((book) => book.id !== changedBook.id)
-          // adding updated book to array
-          .concat(changedBook),
+        booksArr: currentState.booksArr
+          .filter((book) => book.id !== toggledBook.id)
+          .concat(toggledBook),
       }));
     });
   };
 
   render() {
-    // destructuring the books property from this.state
-    const { books } = this.state;
+    const { booksArr } = this.state;
 
     return (
       <div className="app">
@@ -39,9 +33,10 @@ class BooksApp extends Component {
           <Route
             path="/search"
             render={() => (
-              <Search books={books} changeShelf={this.changeShelf} />
+              <Search booksArr={booksArr} toggleLibrary={this.toggleLibrary} />
             )}
           />
+
           <Route
             exact
             path="/"
@@ -50,7 +45,10 @@ class BooksApp extends Component {
                 <div className="list-books-title">
                   <h1>MyReads</h1>
                 </div>
-                <BookList books={books} changeShelf={this.changeShelf} />
+                <BookArray
+                  booksArr={booksArr}
+                  toggleLibrary={this.toggleLibrary}
+                />
                 <div className="open-search">
                   <Link to="/search">Search</Link>
                 </div>
