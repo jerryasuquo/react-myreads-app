@@ -4,37 +4,34 @@ import { Link } from "react-router-dom";
 import Book from "./Book";
 import * as BooksAPI from "../utils/BooksAPI";
 
-class Search extends Component {
+class Filter extends Component {
   static propTypes = {
-    books: PropTypes.array.isRequired,
-    changeShelf: PropTypes.func.isRequired,
+    booksArr: PropTypes.array.isRequired,
+    toggleLibrary: PropTypes.func.isRequired,
   };
 
   state = {
     query: "",
-    newBooks: [],
-    searchErr: false,
+    newBooksArr: [],
+    searchError: false,
   };
 
   getBooks = (e) => {
     const query = e.target.value;
     this.setState({ query });
 
-    // running the search, if user input
     if (query) {
-      BooksAPI.search(query.trim(), 20).then((books) => {
-        books.length > 0
-          ? this.setState({ newBooks: books, searchErr: false })
-          : this.setState({ newBooks: [], searchErr: true });
+      BooksAPI.search(query.trim(), 20).then((booksArr) => {
+        booksArr.length > 0
+          ? this.setState({ newBooksArr: booksArr, searchError: false })
+          : this.setState({ newBooksArr: [], searchError: true });
       });
-
-      // resetting state to default, if query is empty
-    } else this.setState({ newBooks: [], searchErr: false });
+    } else this.setState({ newBooksArr: [], searchError: false });
   };
 
   render() {
-    const { query, newBooks, searchErr } = this.state;
-    const { books, changeShelf } = this.props;
+    const { query, newBooksArr, searchError } = this.state;
+    const { booksArr, toggleLibrary } = this.props;
 
     return (
       <div className="search-books">
@@ -53,22 +50,22 @@ class Search extends Component {
         </div>
 
         <div className="search-books-results">
-          {newBooks.length > 0 && (
+          {newBooksArr.length > 0 && (
             <div>
-              <h3>Search returned {newBooks.length} books </h3>
+              <h3>Search returned {newBooksArr.length} books </h3>
               <ol className="books-grid">
-                {newBooks.map((book) => (
+                {newBooksArr.map((book) => (
                   <Book
                     book={book}
-                    books={books}
+                    booksArr={booksArr}
                     key={book.id}
-                    changeShelf={changeShelf}
+                    toggleLibrary={toggleLibrary}
                   />
                 ))}
               </ol>
             </div>
           )}
-          {searchErr && (
+          {searchError && (
             <h3>Search did not return any books. Please try again!</h3>
           )}
         </div>
@@ -76,4 +73,4 @@ class Search extends Component {
     );
   }
 }
-export default Search;
+export default Filter;

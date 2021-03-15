@@ -2,24 +2,23 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Book from "./Book";
 
-class BookShelf extends Component {
+class BookLibrary extends Component {
   static propTypes = {
-    books: PropTypes.array.isRequired,
-    changeShelf: PropTypes.func.isRequired,
+    booksArr: PropTypes.array.isRequired,
+    toggleLibrary: PropTypes.func.isRequired,
   };
 
   render() {
-    // destructuring the books, changeShelf properties from this.props
-    const { books, changeShelf } = this.props;
+    const { booksArr, toggleLibrary } = this.props;
 
     return (
       <ol className="books-grid">
         {books.map((book) => (
           <Book
             book={book}
-            books={books}
+            booksArr={booksArr}
             key={book.id}
-            changeShelf={changeShelf}
+            toggleLibrary={toggleLibrary}
           />
         ))}
       </ol>
@@ -27,4 +26,4 @@ class BookShelf extends Component {
   }
 }
 
-export default BookShelf;
+export default BookLibrary;

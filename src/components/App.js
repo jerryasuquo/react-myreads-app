@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Route, Switch, Link } from "react-router-dom";
 import * as BooksAPI from "../utils/BooksAPI";
 import BookArray from "./BookArray";
-import Search from "./Search";
+import Filter from "./Filter";
 import NotFound from "./NotFound";
 import "../css/App.css";
 
-class BooksApp extends Component {
+class App extends Component {
   state = { booksArr: [] };
 
   componentDidMount() {
@@ -33,7 +33,7 @@ class BooksApp extends Component {
           <Route
             path="/search"
             render={() => (
-              <Search booksArr={booksArr} toggleLibrary={this.toggleLibrary} />
+              <Filter booksArr={booksArr} toggleLibrary={this.toggleLibrary} />
             )}
           />
 
@@ -62,4 +62,4 @@ class BooksApp extends Component {
   }
 }
 
-export default BooksApp;
+export default App;

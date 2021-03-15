@@ -1,32 +1,31 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-class ShelfToggle extends Component {
+class LibraryToggler extends Component {
   static propTypes = {
     book: PropTypes.object.isRequired,
-    books: PropTypes.array.isRequired,
-    changeShelf: PropTypes.func.isRequired,
+    booksArr: PropTypes.array.isRequired,
+    toggleLibrary: PropTypes.func.isRequired,
   };
 
-  updateShelf = (e) => this.props.changeShelf(this.props.book, e.target.value);
+  updateLibrary = (e) =>
+    this.props.updateLibrary(this.props.book, e.target.value);
 
   render() {
-    const { book, books } = this.props;
+    const { book, booksArr } = this.props;
 
-    // setting current shelf to none as default
-    let currentShelf = "none";
+    let currentLibrary = "none";
 
-    // setting current shelf to book.shelf, if book is in current list
-    for (let item of books) {
+    for (let item of booksArr) {
       if (item.id === book.id) {
-        currentShelf = item.shelf;
+        currentLibrary = item.library;
         break;
       }
     }
 
     return (
       <div className="book-shelf-changer">
-        <select onChange={this.updateShelf} defaultValue={currentShelf}>
+        <select onChange={this.updateLibrary} defaultValue={currentLibrary}>
           <option value="none" disabled>
             Move to...
           </option>
@@ -40,4 +39,4 @@ class ShelfToggle extends Component {
   }
 }
 
-export default ShelfToggle;
+export default LibraryToggler;
